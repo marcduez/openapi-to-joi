@@ -2,6 +2,8 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import Joi, { Description } from "joi"
 
+type PresenceType = "optional" | "required" | "forbidden"
+
 type FlagsType = {
   default?: any
   description?: any
@@ -10,7 +12,7 @@ type FlagsType = {
   format?: "iso" | "javascript" | "unix"
   insensitive?: boolean
   only?: boolean
-  presence?: "optional" | "required" | "forbidden"
+  presence?: PresenceType
   result?: string
   sensitive?: boolean
   single?: boolean
@@ -890,8 +892,19 @@ const descriptionToString = (description: Description) => {
   }
 }
 
-export default (schema: Joi.AnySchema) => {
+const addPresenceToDescription = (
+  description: Description,
+  presence: PresenceType
+) => {
+  // eslint-disable-next-line no-param-reassign
+  description.flags = { ...(description.flags ?? {}), presence }
+}
+
+export default (schema: Joi.AnySchema, presence?: PresenceType) => {
   const description = schema.describe()
-  // console.log(JSON.stringify(description, null, 2))
+  if (presence !== undefined) {
+    addPresenceToDescription(description, presence)
+  }
+
   return descriptionToString(description)
 }

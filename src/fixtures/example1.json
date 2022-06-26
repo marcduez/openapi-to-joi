@@ -10,9 +10,23 @@
     }
   ],
   "paths": {
-    "/": {
+    "/{item_id}": {
       "get": {
         "operationId": "get",
+        "parameters": [
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "$ref": "#/components/parameters/ExtraParameter"
+          }
+        ],
         "responses": {
           "200": {
             "description": "200 Response",
@@ -29,6 +43,15 @@
     }
   },
   "components": {
+    "parameters": {
+      "ExtraParameter": {
+        "name": "extra",
+        "in": "query",
+        "schema": {
+          "type": "boolean"
+        }
+      }
+    },
     "schemas": {
       "Component1": {
         "type": "object",
