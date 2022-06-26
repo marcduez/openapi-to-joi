@@ -21,24 +21,24 @@ jobs:
 
       - run: yarn lint
 
-      - run: yarn test --ci
+      # - run: yarn test --ci
 
-      - run: yarn build
+      # - run: yarn build
 
-      - run: cp package.json README.md LICENSE dist
+      # - run: cp package.json README.md LICENSE dist
 
-      - uses: JS-DevTools/npm-publish@v1
-        id: npm_publish
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          access: public
-          package: dist/package.json
+      # - uses: JS-DevTools/npm-publish@v1
+      #   id: npm_publish
+      #   with:
+      #     token: ${{ secrets.NPM_TOKEN }}
+      #     access: public
+      #     package: dist/package.json
 
-      - uses: actions/create-release@v1
-        if: steps.npm_publish.outputs.type != 'none'
-        id: create_release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.npm_publish.outputs.version }}
-          release_name: ${{ steps.npm_publish.outputs.version }}
+      # - uses: actions/create-release@v1
+      #   if: steps.npm_publish.outputs.type != 'none'
+      #   id: create_release
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ steps.npm_publish.outputs.version }}
+      #     release_name: ${{ steps.npm_publish.outputs.version }}

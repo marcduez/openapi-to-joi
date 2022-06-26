@@ -1,7 +1,8 @@
+import $SwaggerParser from "@apidevtools/swagger-parser"
 import enjoi from "enjoi"
 import { OpenAPIV3 } from "openapi-types"
 import prettier from "prettier"
-import SwaggerParser from "swagger-parser"
+
 import joiSchemaToCode from "./joi-schema-to-code"
 
 const TEMPLATE = `
@@ -78,7 +79,7 @@ const getComponentSchemas = (document: OpenAPIV3.Document) =>
     .join(",")
 
 export default async (schemaPath: string, prettierConfigPath?: string) => {
-  const document = (await new SwaggerParser().validate(schemaPath, {
+  const document = (await $SwaggerParser.validate(schemaPath, {
     validate: { schema: false },
   })) as OpenAPIV3.Document
 
