@@ -15,11 +15,11 @@
     "swagger"
   ],
   "dependencies": {
+    "@apidevtools/swagger-parser": "^10.1.0",
     "enjoi": "^9.0.1",
     "joi": "^17.6.0",
     "openapi-types": "^12.0.0",
     "prettier": "^2.7.1",
-    "swagger-parser": "^10.0.3",
     "yargs": "^17.5.1"
   },
   "devDependencies": {
