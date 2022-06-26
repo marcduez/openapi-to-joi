@@ -1,5 +1,17 @@
 # openapi-to-joi
 
+<span class="badge-npmversion"><a href="https://npmjs.org/package/@marcduez/openapi-to-joi" title="View this project on NPM"><img src="https://img.shields.io/npm/v/@marcduez/openapi-to-joi.svg" alt="NPM version" /></a></span>
+
+## Installation
+
+```sh
+$ npm install @marcduez/openapi-to-joi
+
+$ yarn add @marcduez/openapi-to-joi
+```
+
+## General Usage
+
 Generates a file with Joi schemas from an OpenAPI 3 document.
 
 For example, starting with this document:
@@ -84,4 +96,14 @@ export const schemas = {
     }).unknown(),
   },
 }
+```
+
+### Using the CLI
+
+To view usage instructions for the CLI, use the `--help` command:
+
+```sh
+$ npm run openapi-to-joi --help
+
+$ yarn openapi-to-joi --help
 ```
