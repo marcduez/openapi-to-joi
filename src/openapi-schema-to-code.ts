@@ -78,11 +78,9 @@ const getComponentSchemas = (document: OpenAPIV3.Document) =>
     .join(",")
 
 export default async (schemaPath: string, prettierConfigPath?: string) => {
-  const options: SwaggerParser.Options = { validate: { schema: false } }
-  const document = (await SwaggerParser.validate(
-    schemaPath,
-    options
-  )) as OpenAPIV3.Document
+  const document = (await new SwaggerParser().validate(schemaPath, {
+    validate: { schema: false },
+  })) as OpenAPIV3.Document
 
   const mergedTemplate = TEMPLATE.replace(
     "{OPERATION_SCHEMAS}",
