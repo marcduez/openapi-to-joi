@@ -1,7 +1,8 @@
 {
-  "name": "openapi-to-joi",
+  "name": "@marcduez/openapi-to-joi",
   "version": "1.0.0",
   "main": "cli.js",
+  "types": "cli.d.ts",
   "repository": "git@github.com:marcduez/openapi-to-joi.git",
   "author": "Marc Duez <marcduez@gmail.com>",
   "license": "MIT",
