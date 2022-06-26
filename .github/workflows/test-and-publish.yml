@@ -1,0 +1,44 @@
+name: Test And Publish
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  default:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+          cache: "yarn"
+
+      - run: yarn install --frozen-lockfile
+
+      - run: yarn lint
+
+      - run: yarn test --ci
+
+      - run: yarn build
+
+      - run: cp package.json README.md LICENSE dist
+
+      - uses: JS-DevTools/npm-publish@v1
+        id: npm_publish
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          access: public
+          package: dist/package.json
+
+      - uses: actions/create-release@v1
+        if: steps.npm_publish.outputs.type != 'none'
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.npm_publish.outputs.version }}
+          release_name: ${{ steps.npm_publish.outputs.version }}

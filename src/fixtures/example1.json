@@ -1,0 +1,66 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Example 1"
+  },
+  "servers": [
+    {
+      "url": "http://domain.com"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "get",
+        "responses": {
+          "200": {
+            "description": "200 Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Component1"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Component1": {
+        "type": "object",
+        "required": ["field1", "field2"],
+        "properties": {
+          "field1": {
+            "type": "string",
+            "format": "email"
+          },
+          "field2": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "field3": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 10,
+            "multipleOf": 0.1
+          },
+          "field4": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "field5": {
+            "$ref": "#/components/schemas/Component2"
+          }
+        }
+      },
+      "Component2": {
+        "enum": ["option1", "option2"],
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "alphanum",
+    "enjoi",
+    "lcov",
+    "nand",
+    "openapi",
+    "openapiv3",
+    "oxor",
+    "serializers",
+    "tlds",
+    "unmocked",
+    "uuidv4",
+    "uuidv5"
+  ]
+}
