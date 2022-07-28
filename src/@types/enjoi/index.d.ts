@@ -4,6 +4,6 @@ declare module "enjoi" {
 
   export default {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    schema: (schemaObj: OpenAPIV3.SchemaObject) => Joi.AnySchema,
+    schema: (schemaObj: OpenAPIV3.SchemaObject, options?: any) => Joi.AnySchema,
   }
 }

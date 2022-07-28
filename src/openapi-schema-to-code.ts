@@ -1,7 +1,9 @@
 import SwaggerParser from "@apidevtools/swagger-parser"
 import enjoi from "enjoi"
+import Joi from "joi"
 import { OpenAPIV3 } from "openapi-types"
 import prettier from "prettier"
+import { stringify } from "querystring"
 
 import joiSchemaToCode from "./joi-schema-to-code"
 
@@ -45,19 +47,28 @@ const getOperationSchemas = (document: OpenAPIV3.Document) => {
     .map((operation) => {
       const parameters = (operation.parameters ??
         []) as OpenAPIV3.ParameterObject[]
-      const parameterSchemas = parameters
-        .filter((it) => !!it.schema)
-        .map((parameter) => {
-          const joiSchema = enjoi.schema(
-            parameter.schema! as OpenAPIV3.SchemaObject
-          )
-          const parameterKey = JSON.stringify(parameter.name)
-          const code = joiSchemaToCode(
-            joiSchema,
-            parameter.required === true ? "required" : "optional"
-          )
-          return `${parameterKey}: ${code}`
-        })
+
+      function stringifyParameter(parameter: OpenAPIV3.ParameterObject) {
+        const joiSchema = enjoi.schema(
+          parameter.schema! as OpenAPIV3.SchemaObject
+        )
+        const parameterKey = JSON.stringify(parameter.name)
+        const code = joiSchemaToCode(
+          joiSchema,
+          parameter.required === true ? "required" : "optional"
+        )
+        return `${parameterKey}: ${code}`
+      }
+
+      const parameterSchemas = ["path", "query", "header", "cookie"].map(
+        (parameterType) => {
+          const params = parameters
+            .filter((it) => !!it.schema)
+            .filter((parameter) => parameter.in === parameterType)
+          const paramsSchema = params.map(stringifyParameter)
+          return `${parameterType}: Joi.object({${paramsSchema.join(",")}})`
+        }
+      )
 
       if (!parameterSchemas.length) {
         return null
@@ -73,7 +84,23 @@ const getOperationSchemas = (document: OpenAPIV3.Document) => {
 const getComponentSchemas = (document: OpenAPIV3.Document) =>
   Object.entries(document.components?.schemas ?? {})
     .map(([name, schema]) => {
-      const joiSchema = enjoi.schema(schema as OpenAPIV3.SchemaObject)
+      const joiSchema = enjoi.schema(schema as OpenAPIV3.SchemaObject, {
+        refineType(type: string, format: string) {
+          if (type === "string" && ["date", "date-time"].includes(format)) {
+            return "date"
+          }
+          return type
+        },
+        refineSchema(
+          joiDescription: Joi.Description,
+          jsonSchema: OpenAPIV3.SchemaObject
+        ) {
+          if (jsonSchema.nullable) {
+            return joiDescription.allow(null)
+          }
+          return joiDescription
+        },
+      })
       return `${JSON.stringify(name)}: ${joiSchemaToCode(joiSchema)}`
     })
     .join(",")

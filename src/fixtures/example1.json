@@ -84,6 +84,33 @@
       "Component2": {
         "enum": ["option1", "option2"],
         "type": "string"
+      },
+      "Component3": {
+        "allOf": [{ "type": "string" }, { "type": "number" }]
+      },
+      "Component4": {
+        "anyOf": [{ "type": "string" }, { "type": "number" }]
+      },
+      "Component5": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["pet_type"],
+            "properties": {
+              "pet_type": { "type": "string" },
+              "hunt": { "type": "boolean" }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["pet_type"],
+            "properties": {
+              "pet_type": { "type": "string" },
+              "bark": { "type": "boolean" }
+            }
+          }
+        ],
+        "discriminator": { "propertyName": "pet_type" }
       }
     }
   }

@@ -21,6 +21,7 @@ type FlagsType = {
   unit?: string
   unknown?: boolean
   unsafe?: boolean
+  match?: "all" | "one" | "any"
 }
 
 type PreferencesType = {
@@ -158,7 +159,7 @@ const appendDefault = (parts: string[], description: Description) => {
 
 const appendDescription = (parts: string[], description: Description) => {
   const flags = description.flags as FlagsType | undefined
-  if (flags?.description !== undefined) {
+  if (flags?.description !== undefined && flags?.description !== "") {
     parts.push(`.description(${JSON.stringify(flags.description)})`)
   }
 }
@@ -861,6 +862,23 @@ const stringDescriptionToString = (description: Description) => {
   return parts.join("")
 }
 
+const alternativesDescriptionToString = (description: Description) => {
+  const parts: string[] = ["Joi.alternatives()"]
+
+  const flags = description.flags as FlagsType | undefined
+  const matchMode = flags?.match || "any"
+  parts.push(`.match("${matchMode}")`)
+
+  const matches = (description.matches as any[]).map((match) =>
+    descriptionToString(match.schema)
+  )
+  parts.push(`.try(${matches.join(",")})`)
+
+  appendCommon(parts, description)
+
+  return parts.join("")
+}
+
 const descriptionToString = (description: Description) => {
   switch (description.type) {
     case "any":
@@ -886,6 +904,9 @@ const descriptionToString = (description: Description) => {
 
     case "string":
       return stringDescriptionToString(description)
+
+    case "alternatives":
+      return alternativesDescriptionToString(description)
 
     default:
       throw new Error(`Unexpected type: ${description.type}`)
