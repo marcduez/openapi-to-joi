@@ -561,4 +561,29 @@ describe("joiSchemaToCode()", () => {
       expect(joiSchemaToCode(schema)).toEqual(expected)
     })
   })
+
+  describe("alternatives schema", () => {
+    it.each([
+      [
+        Joi.alternatives()
+          .try(Joi.string().pattern(/^foo/), Joi.string().pattern(/bar$/))
+          .match("all"),
+        'Joi.alternatives().match("all").try(Joi.string().pattern(/^foo/,{}),Joi.string().pattern(/bar$/,{}))',
+      ],
+      [
+        Joi.alternatives()
+          .try(Joi.string().pattern(/^foo/), Joi.string().pattern(/bar$/))
+          .match("any"),
+        'Joi.alternatives().match("any").try(Joi.string().pattern(/^foo/,{}),Joi.string().pattern(/bar$/,{}))',
+      ],
+      [
+        Joi.alternatives()
+          .try(Joi.string().pattern(/^foo/), Joi.string().pattern(/bar$/))
+          .match("one"),
+        'Joi.alternatives().match("one").try(Joi.string().pattern(/^foo/,{}),Joi.string().pattern(/bar$/,{}))',
+      ],
+    ])("returns expected value", (schema, expected) => {
+      expect(joiSchemaToCode(schema)).toEqual(expected)
+    })
+  })
 })
